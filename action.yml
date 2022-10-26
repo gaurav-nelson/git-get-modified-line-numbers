@@ -1,0 +1,9 @@
+# action.yml
+name: 'Get Git modified files and line numbers'
+description: 'Find line numbers of all modified files in the last commit'
+outputs:
+  modified_lines: # id of output
+    description: 'A JSON object containing the modified or added filenames and the line numbers of the modified lines.'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

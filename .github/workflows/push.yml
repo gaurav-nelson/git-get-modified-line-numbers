@@ -1,0 +1,13 @@
+on: push
+name: Run action
+jobs:
+  list-modified-lines:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: Get modified files and lines
+      id: modified-lines
+      uses: ./
+    - name: Get the output
+      run: echo "${{ steps.modified-lines.outputs.modified_lines }}"
+
