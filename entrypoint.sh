@@ -1,5 +1,7 @@
 #!/bin/sh -l
 
+git config --global --add safe.directory '*'
+
 INPUT=""
 if [[ $(git rev-list --count HEAD) -eq 1 ]]; then
     COMMIT=$(git rev-parse HEAD)
@@ -11,8 +13,6 @@ else
 grep -v -e '^[+-]' -e '^index' | \
 sed 's/diff --git a.* b\//\//g; s/.*+\(.*\)@@.*/\1/g; s/^ -//g; s/,+[0-9]*//g; s/\(^[0-9]*\) +/\1-/g;' | grep -v '\\')
 fi
-
-#echo "time=$time" >> $GITHUB_OUTPUT
 
 OUTPUT=""
 
@@ -49,7 +49,7 @@ done <<< "$INPUT"
 
 OUTPUT="${OUTPUT}\n"
 
-function convert_to_json() {
+function TO_JSON() {
     local input="$1"
     local json="{"
     local lines=$(echo "$input" | tr '\n' ' ')
@@ -73,7 +73,5 @@ function convert_to_json() {
     echo $json
 }
 
-#echo "${OUTPUT}"
-
-json_output=$(convert_to_json "$OUTPUT")
-echo $json_output
+JSON_OUTPUT=$(TO_JSON "$OUTPUT")
+echo $JSON_OUTPUT
