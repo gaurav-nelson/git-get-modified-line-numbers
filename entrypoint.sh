@@ -47,31 +47,29 @@ while read CURRENT_LINE; do
     fi
 done <<< "$INPUT"
 
-OUTPUT="${OUTPUT}\n"
+OUTPUT="${OUTPUT}\nEND"
 
-function TO_JSON() {
-    local input="$1"
+function convert_to_json() {
+    local input=$1
+    input="${input//\\n/$'\n'}"
     local json="{"
-    local lines=$(echo "$input" | tr '\n' ' ')
-    local current_file=""
-    for line in $lines; do
-        if [[ $line == "/"* ]]; then
-            if [[ ! -z $current_file ]]; then
-                json=${json%?}
-                json+="],"
-            fi
-            current_file=$line
-            json+="\"$current_file\":["
-        elif [[ $line == "END" ]]; then
-            continue
+    local filename=""
+    while read -r line; do
+        if [[ $line == "END" ]]; then
+            json=${json%,}
+            json+="],"
+        elif [[ $line =~ ^/ ]]; then
+            filename=$line
+            json+="\"$filename\":["
         else
+            line="${line// /,}"
             json+="$line,"
         fi
-    done
-    json=${json%?}
-    json+="]}"
-    echo $json
+    done <<< "$input"
+    json=${json%,}
+    json+="}"
+    echo "$json"
 }
 
-JSON_OUTPUT=$(TO_JSON "$OUTPUT")
+JSON_OUTPUT=$(convert_to_json "$OUTPUT")
 echo $JSON_OUTPUT
