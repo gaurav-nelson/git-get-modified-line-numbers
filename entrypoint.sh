@@ -1,4 +1,4 @@
-#!/bin/sh -l
+#!/bin/bash
 
 git config --global --add safe.directory '*'
 
