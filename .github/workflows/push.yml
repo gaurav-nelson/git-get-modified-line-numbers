@@ -6,6 +6,8 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@master
+      with:
+        fetch-depth: 2
     - name: Get modified files and lines
       id: modified-lines
       uses: ./
